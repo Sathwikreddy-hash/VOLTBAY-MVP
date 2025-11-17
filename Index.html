@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VoltBay MVP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-deep: #020014;
+      --card: #020617;
+      --border: #1f2937;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.12);
+      --accent-soft-border: rgba(56,189,248,0.4);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      background: radial-gradient(circle at top, #0f172a, #020617 45%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      padding: 16px;
+      border-bottom: 1px solid #111827;
+      background: linear-gradient(to right, #020617cc, #020617f2);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo {
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      font-size: 18px;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+    .tagline {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    main {
+      padding: 16px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .screen {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .screen.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .center-wrap {
+      min-height: calc(100vh - 90px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: radial-gradient(circle at top left, #020617, #020014);
+      border-radius: 18px;
+      padding: 18px 16px 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+    }
+    .card h1, .card h2 {
+      margin: 0 0 8px;
+    }
+    .card h1 {
+      font-size: 20px;
+    }
+    .card p {
+      margin: 2px 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .field {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    label {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    input {
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      padding: 8px 12px;
+      font-size: 14px;
+      background: #020617;
+      color: var(--text);
+      outline: none;
+    }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56,189,248,0.4);
+    }
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      background: var(--accent);
+      color: #020617;
+      margin-top: 14px;
+      transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, background 0.12s;
+      box-shadow: 0 10px 25px rgba(56,189,248,0.28);
+    }
+    button:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 4px 15px rgba(15,23,42,0.5);
+    }
+    button.secondary {
+      background: transparent;
+      border: 1px solid #4b5563;
+      color: var(--text);
+      box-shadow: none;
+      margin-left: 8px;
+    }
+    button.secondary:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: none;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 768px) {
+      .grid {
+        grid-template-columns: 1.15fr 1fr;
+        align-items: flex-start;
+      }
+    }
+    .muted { color: var(--muted); font-size: 13px; }
+    .station-card {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #0f172a;
+      margin-bottom: 8px;
+    }
+    .station-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent-soft-border);
+    }
+    .slot-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .slot-row {
+      border-radius: 999px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #020617;
+      border: 1px solid #111827;
+    }
+    .slot-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .slot-time {
+      font-size: 14px;
+    }
+    .slot-status {
+      font-size: 11px;
+    }
+    .status-available { color: #22c55e; }
+    .status-booked { color: #f97316; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #020617;
+      border: 1px solid #1f2937;
+    }
+    .pill-dot {
+      width: 7px; height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+    .pill-dot.busy { background: #f97316; }
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .booking-summary {
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .summary-label {
+      color: var(--muted);
+      width: 90px;
+      display: inline-block;
+    }
+    .empty {
+      font-size: 13px;
+      color: #6b7280;
+      padding: 6px 0;
+    }
+    .chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      margin-bottom: 4px;
+    }
+    .chip {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: #9ca3af;
+    }
+    .highlight {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    /* Overlay for confirmation */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+    }
+    .overlay.active {
+      display: flex;
+      animation: fadeIn 0.2s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">VoltBay</div>
+    <div class="tagline">Book your EV charging slot in advance — skip the waiting line.</div>
+  </header>
+
+  <main id="app">
+    <!-- SCREEN 1: LOGIN / WELCOME -->
+    <section id="screen-auth" class="screen active">
+      <div class="center-wrap">
+        <div class="card" style="max-width: 420px; width: 100%;">
+          <h1>Skip the EV waiting line.</h1>
+          <p>VoltBay lets you reserve a charging slot before you arrive, so you don’t waste time at the station.</p>
+
+          <div class="chips">
+            <span class="chip">1-hour fixed slots</span>
+            <span class="chip">Real availability</span>
+            <span class="chip">Faster trips</span>
+          </div>
+
+          <div class="field">
+            <label for="nameInput">Your name (for demo)</label>
+            <input id="nameInput" placeholder="e.g. Sathwik" />
+          </div>
+
+          <button onclick="handleAuthContinue()">Continue</button>
+          <p class="muted" style="margin-top:10px;">No signup, no password. This is a demo MVP flow.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: MAIN APP -->
+    <section id="screen-main" class="screen">
+      <div class="grid">
+        <!-- LEFT: Stations -->
+        <div class="card">
+          <h2>Nearby stations</h2>
+          <p class="muted" id="welcomeText"></p>
+          <div id="stationsContainer"></div>
+        </div>
+
+        <!-- RIGHT: Slots + Booking -->
+        <div class="card">
+          <div id="rightContent">
+            <p class="empty">Select a station to see available slots.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: SUCCESS -->
+    <section id="screen-success" class="screen">
+      <div class="center-wrap">
+        <div class="card" style="max-width: 420px; width: 100%;">
+          <h1>Booking confirmed 🎉</h1>
+          <p class="muted">Here’s your latest VoltBay booking summary.</p>
+          <div id="successSummary" class="booking-summary" style="margin-top:10px;"></div>
+          <button onclick="goBackToStations()">Back to stations</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- CONFIRM OVERLAY -->
+  <div id="confirmOverlay" class="overlay">
+    <div class="card" style="max-width: 360px; width: 100%;">
+      <h2>Confirm this slot?</h2>
+      <div id="confirmDetails" class="booking-summary" style="margin-top:6px;"></div>
+      <div style="margin-top:14px;">
+        <button onclick="confirmBooking()">Confirm</button>
+        <button class="secondary" onclick="closeConfirm()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --------- Fake backend data ----------
+
+    const stations = [
+      {
+        station_id: "ST001",
+        name: "Hanamakonda Charger",
+        location: "Hanamakonda",
+        charger_kw: 120,
+        total_slots: 7
+      },
+      {
+        station_id: "ST002",
+        name: "Warangal EV Hub",
+        location: "Warangal",
+        charger_kw: 70,
+        total_slots: 4
+      },
+      {
+        station_id: "ST003",
+        name: "Mulugu Highway Charger",
+        location: "Mulugu",
+        charger_kw: 100,
+        total_slots: 6
+      },
+      {
+        station_id: "ST004",
+        name: "Hyderabad City Charger",
+        location: "Hyderabad",
+        charger_kw: 150,
+        total_slots: 8
+      }
+    ];
+
+    const slots = [
+      { slot_id: "SLOT001", station_id: "ST001", date: "2025-11-16", start_time: "12:00", end_time: "13:00", status: "BOOKED" },
+      { slot_id: "SLOT002", station_id: "ST001", date: "2025-11-16", start_time: "13:00", end_time: "14:00", status: "AVAILABLE" },
+      { slot_id: "SLOT003", station_id: "ST001", date: "2025-11-16", start_time: "14:00", end_time: "15:00", status: "AVAILABLE" },
+      { slot_id: "SLOT004", station_id: "ST001", date: "2025-11-16", start_time: "15:00", end_time: "16:00", status: "BOOKED" },
+      { slot_id: "SLOT005", station_id: "ST002", date: "2025-11-16", start_time: "16:00", end_time: "17:00", status: "AVAILABLE" },
+      { slot_id: "SLOT006", station_id: "ST002", date: "2025-11-16", start_time: "17:00", end_time: "18:00", status: "BOOKED" },
+      { slot_id: "SLOT007", station_id: "ST003", date: "2025-11-16", start_time: "18:00", end_time: "19:00", status: "AVAILABLE" },
+      { slot_id: "SLOT008", station_id: "ST004", date: "2025-11-16", start_time: "19:00", end_time: "20:00", status: "AVAILABLE" }
+    ];
+
+    let currentUser = null;
+    let selectedStationId = null;
+    let lastBooking = null;
+    let pendingBooking = null;
+
+    // ---------- Screen helpers ----------
+
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+
+    // ---------- Auth flow ----------
+
+    function handleAuthContinue() {
+      const input = document.getElementById("nameInput");
+      const name = (input.value || "").trim();
+      if (!name) {
+        alert("Enter your name to continue the demo.");
+        return;
+      }
+      currentUser = name;
+      document.getElementById("welcomeText").textContent =
+        `Hi ${name}, choose a station and book a 1-hour charging slot.`;
+      showScreen("screen-main");
+      renderStations();
+    }
+
+    // ---------- Stations + slots ----------
+
+    function renderStations() {
+      const container = document.getElementById("stationsContainer");
+      container.innerHTML = "";
+
+      stations.forEach((station) => {
+        const card = document.createElement("div");
+        card.className = "station-card";
+
+        const header = document.createElement("div");
+        header.className = "station-header";
+
+        const title = document.createElement("div");
+        title.innerHTML =
+          `<strong>${station.name}</strong><br><span class="muted">${station.location}</span>`;
+
+        const badge = document.createElement("div");
+        badge.className = "badge";
+        badge.textContent = `${station.charger_kw} kW • ${station.total_slots} bays`;
+
+        header.appendChild(title);
+        header.appendChild(badge);
+
+        const btn = document.createElement("button");
+        btn.textContent = selectedStationId === station.station_id ? "Viewing slots" : "View slots";
+        if (selectedStationId === station.station_id) btn.disabled = true;
+
+        btn.onclick = () => {
+          selectedStationId = station.station_id;
+          renderStations();
+          renderSlotsForStation(station.station_id);
+        };
+
+        card.appendChild(header);
+        card.appendChild(btn);
+        container.appendChild(card);
+      });
+    }
+
+    function renderSlotsForStation(stationId) {
+      const station = stations.find((s) => s.station_id === stationId);
+      const container = document.getElementById("rightContent");
+      container.innerHTML = "";
+
+      const title = document.createElement("div");
+      title.className = "section-title";
+      title.textContent = station.name;
+      container.appendChild(title);
+
+      const meta = document.createElement("p");
+      meta.className = "muted";
+      meta.textContent = `${station.location} • ${station.charger_kw} kW • ${station.total_slots} bays`;
+      container.appendChild(meta);
+
+      const legend = document.createElement("p");
+      legend.innerHTML =
+        `<span class="pill"><span class="pill-dot"></span>Available</span> ` +
+        `<span class="pill"><span class="pill-dot busy"></span>Booked</span>`;
+      legend.style.margin = "8px 0 6px";
+      container.appendChild(legend);
+
+      const slotList = document.createElement("div");
+      slotList.className = "slot-list";
+
+      const stationSlots = slots.filter((s) => s.station_id === stationId);
+
+      if (stationSlots.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No slots configured for this station yet.";
+        slotList.appendChild(empty);
+      } else {
+        stationSlots.forEach((slot) => {
+          const row = document.createElement("div");
+          row.className = "slot-row";
+
+          const main = document.createElement("div");
+          main.className = "slot-main";
+
+          const time = document.createElement("div");
+          time.className = "slot-time";
+          time.textContent = `${slot.start_time} – ${slot.end_time}`;
+
+          const status = document.createElement("div");
+          status.className =
+            "slot-status " +
+            (slot.status === "AVAILABLE" ? "status-available" : "status-booked");
+          status.textContent = slot.status === "AVAILABLE" ? "Available" : "Booked";
+
+          main.appendChild(time);
+          main.appendChild(status);
+
+          const btn = document.createElement("button");
+          if (slot.status === "AVAILABLE") {
+            btn.textContent = "Book";
+            btn.onclick = () => openConfirm(station, slot);
+          } else {
+            btn.textContent = "Full";
+            btn.disabled = true;
+          }
+
+          row.appendChild(main);
+          row.appendChild(btn);
+          slotList.appendChild(row);
+        });
+      }
+
+      container.appendChild(slotList);
+    }
+
+    // ---------- Confirm + booking ----------
+
+    function openConfirm(station, slot) {
+      pendingBooking = { station, slot };
+      const details = document.getElementById("confirmDetails");
+      details.innerHTML = `
+        <div><span class="summary-label">Station</span> ${station.name}</div>
+        <div><span class="summary-label">Time</span> ${slot.start_time} – ${slot.end_time}</div>
+        <div><span class="summary-label">User</span> ${currentUser || "Demo user"}</div>
+        <div><span class="summary-label">Date</span> ${slot.date}</div>
+      `;
+      document.getElementById("confirmOverlay").classList.add("active");
+    }
+
+    function closeConfirm() {
+      pendingBooking = null;
+      document.getElementById("confirmOverlay").classList.remove("active");
+    }
+
+    function confirmBooking() {
+      if (!pendingBooking) return;
+      const { station, slot } = pendingBooking;
+
+      slot.status = "BOOKED";
+      const bookingId = "VB-" + Math.floor(Math.random() * 1_000_000);
+
+      lastBooking = {
+        booking_id: bookingId,
+        station_id: station.station_id,
+        slot_id: slot.slot_id,
+        start_time: slot.start_time,
+        end_time: slot.end_time,
+        station_name: station.name,
+        user: currentUser || "Demo user"
+      };
+
+      closeConfirm();
+      renderSlotsForStation(station.station_id);
+      renderStations();
+      renderSuccessScreen();
+      showScreen("screen-success");
+    }
+
+    function renderSuccessScreen() {
+      const box = document.getElementById("successSummary");
+      if (!lastBooking) {
+        box.innerHTML = "<div class='empty'>No booking data.</div>";
+        return;
+      }
+      box.innerHTML = `
+        <div><span class="summary-label">Booking ID</span> <span class="highlight">${lastBooking.booking_id}</span></div>
+        <div><span class="summary-label">Station</span> ${lastBooking.station_name}</div>
+        <div><span class="summary-label">Time</span> ${lastBooking.start_time} – ${lastBooking.end_time}</div>
+        <div><span class="summary-label">User</span> ${lastBooking.user}</div>
+        <div><span class="summary-label">Status</span> Confirmed</div>
+      `;
+    }
+
+    function goBackToStations() {
+      showScreen("screen-main");
+    }
+  </script>
+</body>
+</html>
