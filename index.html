@@ -7,7 +7,7 @@
   <style>
     :root {
       --bg: #020617;
-      --bg-deep: #020014;
+      --bg-soft: #020014;
       --card: #020617;
       --border: #1f2937;
       --accent: #38bdf8;
@@ -15,24 +15,46 @@
       --accent-soft-border: rgba(56,189,248,0.4);
       --text: #e5e7eb;
       --muted: #9ca3af;
+      --slot-bg: radial-gradient(circle at top left, #020617, #020014);
     }
-    * { box-sizing: border-box; }
+
+    :root[data-theme="light"] {
+      --bg: #f3f4f6;
+      --bg-soft: #ffffff;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --accent: #2563eb;
+      --accent-soft: rgba(37,99,235,0.08);
+      --accent-soft-border: rgba(37,99,235,0.35);
+      --text: #0f172a;
+      --muted: #6b7280;
+      --slot-bg: linear-gradient(135deg, #eff6ff, #e0f2fe);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      margin: 0;
-      background: radial-gradient(circle at top, #0f172a, #020617 45%, #000 100%);
+      background: radial-gradient(circle at top, #0f172a, var(--bg) 45%, #000 100%);
       color: var(--text);
       min-height: 100vh;
     }
+
     header {
-      padding: 16px;
-      border-bottom: 1px solid #111827;
-      background: linear-gradient(to right, #020617cc, #020617f2);
-      backdrop-filter: blur(12px);
+      padding: 12px 16px;
+      border-bottom: 1px solid #11182755;
+      background: linear-gradient(to right, var(--bg-soft), #020617f2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       position: sticky;
       top: 0;
       z-index: 10;
+      backdrop-filter: blur(12px);
     }
+
+    .brand { display: flex; flex-direction: column; gap: 2px; }
     .logo {
       font-weight: 700;
       letter-spacing: 0.12em;
@@ -40,84 +62,83 @@
       color: var(--accent);
       text-transform: uppercase;
     }
-    .tagline {
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 4px;
+    .tagline { font-size: 12px; color: var(--muted); }
+
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .theme-toggle {
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: transparent;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
     }
-    main {
-      padding: 16px;
-      max-width: 960px;
-      margin: 0 auto;
-    }
-    .screen {
-      display: none;
-      animation: fadeIn 0.25s ease-out;
-    }
-    .screen.active {
-      display: block;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+
+    main { padding: 16px; max-width: 960px; margin: 0 auto; }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
     .center-wrap {
       min-height: calc(100vh - 90px);
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
     }
+
     .card {
-      background: radial-gradient(circle at top left, #020617, #020014);
-      border-radius: 18px;
-      padding: 18px 16px 20px;
+      background: var(--bg-soft);
+      border-radius: 16px;
+      padding: 18px;
       border: 1px solid var(--border);
-      box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.45);
     }
-    .card h1, .card h2 {
-      margin: 0 0 8px;
-    }
-    .card h1 {
-      font-size: 20px;
-    }
-    .card p {
-      margin: 2px 0;
-      font-size: 13px;
-      color: var(--muted);
-    }
+
+    h1 { font-size: 22px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-bottom: 6px; }
+    h3 { font-size: 16px; margin-bottom: 6px; }
+    p { font-size: 13px; color: var(--muted); }
+
+    .muted { color: var(--muted); }
+
     .field {
       margin-top: 14px;
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
-    label {
-      font-size: 13px;
-      color: var(--muted);
-    }
-    input {
+    label { font-size: 13px; color: var(--muted); }
+
+    input[type="text"] {
       border-radius: 999px;
       border: 1px solid #1f2937;
       padding: 8px 12px;
       font-size: 14px;
       background: #020617;
-      color: var(--text);
+      color: #e5e7eb;
       outline: none;
     }
-    input:focus {
+    :root[data-theme="light"] input[type="text"] {
+      background: #f9fafb;
+      color: #0f172a;
+      border-color: #d1d5db;
+    }
+    input[type="text"]:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 1px rgba(56,189,248,0.4);
     }
+
     button {
       border: none;
       border-radius: 999px;
-      padding: 8px 16px;
+      padding: 9px 16px;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
       background: var(--accent);
       color: #020617;
-      margin-top: 14px;
+      margin-top: 10px;
       transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, background 0.12s;
       box-shadow: 0 10px 25px rgba(56,189,248,0.28);
     }
@@ -130,11 +151,11 @@
       border: 1px solid #4b5563;
       color: var(--text);
       box-shadow: none;
-      margin-left: 8px;
     }
-    button.secondary:active {
-      transform: translateY(1px) scale(0.99);
-      box-shadow: none;
+    button.secondary.small {
+      padding: 6px 12px;
+      font-size: 12px;
+      margin-top: 0;
     }
     button:disabled {
       opacity: 0.5;
@@ -142,282 +163,260 @@
       box-shadow: none;
       transform: none;
     }
+
     .grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 12px;
+      margin-top: 4px;
     }
     @media (min-width: 768px) {
-      .grid {
-        grid-template-columns: 1.15fr 1fr;
-        align-items: flex-start;
-      }
+      .grid { grid-template-columns: 1.15fr 1fr; }
     }
-    .muted { color: var(--muted); font-size: 13px; }
+
     .station-card {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      padding-bottom: 8px;
       border-bottom: 1px solid #0f172a;
-      margin-bottom: 8px;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
     }
     .station-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
+      gap: 8px;
     }
     .badge {
       font-size: 11px;
-      padding: 2px 8px;
+      padding: 3px 8px;
       border-radius: 999px;
       background: var(--accent-soft);
       color: var(--accent);
       border: 1px solid var(--accent-soft-border);
+      white-space: nowrap;
     }
-    .slot-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 360px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-    .slot-row {
-      border-radius: 999px;
-      padding: 8px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #020617;
-      border: 1px solid #111827;
-    }
-    .slot-main {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .slot-time {
-      font-size: 14px;
-    }
-    .slot-status {
-      font-size: 11px;
-    }
-    .status-available { color: #22c55e; }
-    .status-booked { color: #f97316; }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
+    .distance-pill {
       font-size: 11px;
       padding: 3px 8px;
       border-radius: 999px;
       background: #020617;
       border: 1px solid #1f2937;
-    }
-    .pill-dot {
-      width: 7px; height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-    }
-    .pill-dot.busy { background: #f97316; }
-    .section-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .booking-summary {
-      font-size: 13px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .summary-label {
-      color: var(--muted);
-      width: 90px;
+      color: #9ca3af;
+      margin-top: 4px;
       display: inline-block;
     }
-    .empty {
-      font-size: 13px;
-      color: #6b7280;
-      padding: 6px 0;
+    :root[data-theme="light"] .distance-pill {
+      background: #eef2ff;
+      border-color: #c7d2fe;
+      color: #4b5563;
     }
-    .chips {
+
+    .controls {
       display: flex;
-      gap: 6px;
       flex-wrap: wrap;
-      margin-top: 6px;
-      margin-bottom: 4px;
+      gap: 8px;
+      margin: 10px 0 12px;
+      align-items: center;
     }
-    .chip {
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 999px;
+    .controls input { flex: 1 1 160px; }
+
+    .slot-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 320px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+    .slot-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 12px;
       border: 1px solid #1f2937;
-      background: #020617;
-      color: #9ca3af;
+      background-image: var(--slot-bg);
+      background-size: 200% 200%;
+      transition: transform 0.1s ease-out, box-shadow 0.15s ease-out, background-position 0.2s;
     }
-    .highlight {
-      color: var(--accent);
-      font-weight: 600;
+    .slot-row:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 25px rgba(15,23,42,0.6);
+      background-position: 100% 0;
     }
-    /* Overlay for confirmation */
+    :root[data-theme="light"] .slot-row {
+      border-color: #e5e7eb;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.08);
+    }
+
+    .slot-main { font-size: 13px; }
+    .slot-time { font-weight: 600; }
+    .slot-status { font-size: 11px; }
+    .status-available { color: #22c55e; }
+    .status-booked { color: #f97316; }
+
     .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(15,23,42,0.75);
+      background: rgba(0,0,0,0.65);
       display: none;
-      align-items: center;
       justify-content: center;
-      z-index: 30;
+      align-items: center;
+      z-index: 40;
     }
-    .overlay.active {
-      display: flex;
-      animation: fadeIn 0.2s ease-out;
+    .overlay.active { display: flex; }
+
+    .empty {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 8px;
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">VoltBay</div>
-    <div class="tagline">Book your EV charging slot in advance — skip the waiting line.</div>
+    <div class="brand">
+      <div class="logo">VoltBay</div>
+      <div class="tagline">Reserve your charging slot. Skip the waiting.</div>
+    </div>
+    <div class="header-actions">
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+        ☾ Dark
+      </button>
+    </div>
   </header>
 
   <main id="app">
-    <!-- SCREEN 1: LOGIN / WELCOME -->
+    <!-- LOGIN SCREEN -->
     <section id="screen-auth" class="screen active">
       <div class="center-wrap">
-        <div class="card" style="max-width: 420px; width: 100%;">
-          <h1>Skip the EV waiting line.</h1>
-          <p>VoltBay lets you reserve a charging slot before you arrive, so you don’t waste time at the station.</p>
-
-          <div class="chips">
-            <span class="chip">1-hour fixed slots</span>
-            <span class="chip">Real availability</span>
-            <span class="chip">Faster trips</span>
-          </div>
+        <div class="card" style="max-width:420px;width:100%;">
+          <h1>Skip the EV waiting line</h1>
+          <p>VoltBay lets you reserve a charging slot before you arrive, so you don’t waste 30–60 minutes waiting in queues.</p>
 
           <div class="field">
-            <label for="nameInput">Your name (for demo)</label>
-            <input id="nameInput" placeholder="e.g. Sathwik" />
+            <label>Your name (demo)</label>
+            <input id="nameInput" type="text" placeholder="e.g. Sathwik" />
           </div>
 
           <button onclick="handleAuthContinue()">Continue</button>
-          <p class="muted" style="margin-top:10px;">No signup, no password. This is a demo MVP flow.</p>
         </div>
       </div>
     </section>
 
-    <!-- SCREEN 2: MAIN APP -->
+    <!-- MAIN APP SCREEN -->
     <section id="screen-main" class="screen">
       <div class="grid">
         <!-- LEFT: Stations -->
         <div class="card">
           <h2>Nearby stations</h2>
-          <p class="muted" id="welcomeText"></p>
+          <p id="welcomeText" class="muted"></p>
+
+          <div class="controls">
+            <input
+              id="searchInput"
+              type="text"
+              placeholder="Search by station or area…"
+              oninput="handleSearch(this.value)"
+            />
+            <button class="secondary small" onclick="detectLocation()">Detect my location</button>
+          </div>
+
           <div id="stationsContainer"></div>
         </div>
 
-        <!-- RIGHT: Slots + Booking -->
+        <!-- RIGHT: Slots -->
         <div class="card">
           <div id="rightContent">
-            <p class="empty">Select a station to see available slots.</p>
+            <p class="muted">Select a station to view today’s 1-hour slots.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SCREEN 3: SUCCESS -->
+    <!-- SUCCESS SCREEN -->
     <section id="screen-success" class="screen">
       <div class="center-wrap">
-        <div class="card" style="max-width: 420px; width: 100%;">
-          <h1>Booking confirmed 🎉</h1>
-          <p class="muted">Here’s your latest VoltBay booking summary.</p>
-          <div id="successSummary" class="booking-summary" style="margin-top:10px;"></div>
+        <div class="card" style="max-width:420px;width:100%;">
+          <h1>Booking confirmed ✅</h1>
+          <div id="successSummary" style="margin-top:10px;"></div>
           <button onclick="goBackToStations()">Back to stations</button>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- CONFIRM OVERLAY -->
+  <!-- CONFIRM POPUP -->
   <div id="confirmOverlay" class="overlay">
-    <div class="card" style="max-width: 360px; width: 100%;">
-      <h2>Confirm this slot?</h2>
-      <div id="confirmDetails" class="booking-summary" style="margin-top:6px;"></div>
-      <div style="margin-top:14px;">
-        <button onclick="confirmBooking()">Confirm</button>
-        <button class="secondary" onclick="closeConfirm()">Cancel</button>
-      </div>
+    <div class="card" style="max-width:350px;width:100%;">
+      <h3>Confirm this slot?</h3>
+      <div id="confirmDetails" style="margin-top:8px;font-size:13px;"></div>
+      <button onclick="confirmBooking()">Confirm booking</button>
+      <button class="secondary" onclick="closeConfirm()">Cancel</button>
     </div>
   </div>
 
   <script>
-    // --------- Fake backend data ----------
-
     const stations = [
-      {
-        station_id: "ST001",
-        name: "Hanamakonda Charger",
-        location: "Hanamakonda",
-        charger_kw: 120,
-        total_slots: 7
-      },
-      {
-        station_id: "ST002",
-        name: "Warangal EV Hub",
-        location: "Warangal",
-        charger_kw: 70,
-        total_slots: 4
-      },
-      {
-        station_id: "ST003",
-        name: "Mulugu Highway Charger",
-        location: "Mulugu",
-        charger_kw: 100,
-        total_slots: 6
-      },
-      {
-        station_id: "ST004",
-        name: "Hyderabad City Charger",
-        location: "Hyderabad",
-        charger_kw: 150,
-        total_slots: 8
-      }
+      { id:"ST1", name:"Hanamakonda Charger", location:"Hanamakonda", kw:120, total:7, lat:17.985, lng:79.59 },
+      { id:"ST2", name:"Warangal EV Hub", location:"Warangal", kw:80, total:6, lat:17.98, lng:79.6 },
+      { id:"ST3", name:"Mulugu Highway Charger", location:"Mulugu", kw:100, total:5, lat:18.19, lng:79.93 },
+      { id:"ST4", name:"Kazipet Fast Charge", location:"Kazipet", kw:60, total:4, lat:17.97, lng:79.52 },
+      { id:"ST5", name:"Hyderabad City Charger", location:"Hyderabad Banjara Hills", kw:150, total:10, lat:17.41, lng:78.44 },
+      { id:"ST6", name:"Hyderabad ORR EV Hub", location:"Hyderabad ORR", kw:180, total:12, lat:17.36, lng:78.55 }
     ];
 
     const slots = [
-      { slot_id: "SLOT001", station_id: "ST001", date: "2025-11-16", start_time: "12:00", end_time: "13:00", status: "BOOKED" },
-      { slot_id: "SLOT002", station_id: "ST001", date: "2025-11-16", start_time: "13:00", end_time: "14:00", status: "AVAILABLE" },
-      { slot_id: "SLOT003", station_id: "ST001", date: "2025-11-16", start_time: "14:00", end_time: "15:00", status: "AVAILABLE" },
-      { slot_id: "SLOT004", station_id: "ST001", date: "2025-11-16", start_time: "15:00", end_time: "16:00", status: "BOOKED" },
-      { slot_id: "SLOT005", station_id: "ST002", date: "2025-11-16", start_time: "16:00", end_time: "17:00", status: "AVAILABLE" },
-      { slot_id: "SLOT006", station_id: "ST002", date: "2025-11-16", start_time: "17:00", end_time: "18:00", status: "BOOKED" },
-      { slot_id: "SLOT007", station_id: "ST003", date: "2025-11-16", start_time: "18:00", end_time: "19:00", status: "AVAILABLE" },
-      { slot_id: "SLOT008", station_id: "ST004", date: "2025-11-16", start_time: "19:00", end_time: "20:00", status: "AVAILABLE" }
+      { id:"S1", st:"ST1", start:"12:00", end:"13:00", status:"BOOKED" },
+      { id:"S2", st:"ST1", start:"13:00", end:"14:00", status:"AVAILABLE" },
+      { id:"S3", st:"ST1", start:"14:00", end:"15:00", status:"AVAILABLE" },
+      { id:"S4", st:"ST2", start:"15:00", end:"16:00", status:"AVAILABLE" },
+      { id:"S5", st:"ST2", start:"16:00", end:"17:00", status:"BOOKED" },
+      { id:"S6", st:"ST3", start:"17:00", end:"18:00", status:"AVAILABLE" },
+      { id:"S7", st:"ST4", start:"18:00", end:"19:00", status:"AVAILABLE" },
+      { id:"S8", st:"ST5", start:"19:00", end:"20:00", status:"AVAILABLE" },
+      { id:"S9", st:"ST6", start:"20:00", end:"21:00", status:"AVAILABLE" }
     ];
 
     let currentUser = null;
-    let selectedStationId = null;
-    let lastBooking = null;
+    let selectedStation = null;
     let pendingBooking = null;
+    let lastBooking = null;
+    let userLocation = null;
+    let searchTerm = "";
 
-    // ---------- Screen helpers ----------
+    function toggleTheme() {
+      const root = document.documentElement;
+      const btn = document.getElementById("themeBtn");
+      const isLight = root.dataset.theme === "light";
+      if (isLight) {
+        root.dataset.theme = "dark";
+        btn.textContent = "☾ Dark";
+      } else {
+        root.dataset.theme = "light";
+        btn.textContent = "☀ Light";
+      }
+    }
 
     function showScreen(id) {
       document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
       document.getElementById(id).classList.add("active");
     }
 
-    // ---------- Auth flow ----------
+    function distanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a =
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) *
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
 
     function handleAuthContinue() {
-      const input = document.getElementById("nameInput");
-      const name = (input.value || "").trim();
-      if (!name) {
-        alert("Enter your name to continue the demo.");
-        return;
-      }
+      const name = document.getElementById("nameInput").value.trim();
+      if (!name) { alert("Enter your name to continue"); return; }
       currentUser = name;
       document.getElementById("welcomeText").textContent =
         `Hi ${name}, choose a station and book a 1-hour charging slot.`;
@@ -425,127 +424,130 @@
       renderStations();
     }
 
-    // ---------- Stations + slots ----------
+    function handleSearch(value) {
+      searchTerm = (value || "").toLowerCase();
+      renderStations();
+    }
+
+    function detectLocation() {
+      if (!navigator.geolocation) {
+        alert("Location not supported on this device.");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          alert("Location detected. Sorting by nearest.");
+          renderStations();
+        },
+        (err) => {
+          console.log(err);
+          alert("Could not get your location.");
+        }
+      );
+    }
 
     function renderStations() {
-      const container = document.getElementById("stationsContainer");
-      container.innerHTML = "";
+      const box = document.getElementById("stationsContainer");
+      if (!box) return;
+      box.innerHTML = "";
 
-      stations.forEach((station) => {
-        const card = document.createElement("div");
-        card.className = "station-card";
+      let list = [...stations];
 
-        const header = document.createElement("div");
-        header.className = "station-header";
+      if (searchTerm) {
+        list = list.filter(st =>
+          st.name.toLowerCase().includes(searchTerm) ||
+          st.location.toLowerCase().includes(searchTerm)
+        );
+      }
 
-        const title = document.createElement("div");
-        title.innerHTML =
-          `<strong>${station.name}</strong><br><span class="muted">${station.location}</span>`;
+      if (userLocation) {
+        list.sort((a, b) => {
+          const da = distanceKm(userLocation.lat, userLocation.lng, a.lat, a.lng);
+          const db = distanceKm(userLocation.lat, userLocation.lng, b.lat, b.lng);
+          return da - db;
+        });
+      }
 
-        const badge = document.createElement("div");
-        badge.className = "badge";
-        badge.textContent = `${station.charger_kw} kW • ${station.total_slots} bays`;
+      if (list.length === 0) {
+        box.innerHTML = `<p class="empty">No stations found for this search.</p>`;
+        return;
+      }
 
-        header.appendChild(title);
-        header.appendChild(badge);
+      list.forEach(st => {
+        let distanceLabel = "";
+        if (userLocation) {
+          const dist = distanceKm(userLocation.lat, userLocation.lng, st.lat, st.lng);
+          distanceLabel = `<div class="distance-pill">${dist.toFixed(1)} km away</div>`;
+        }
 
-        const btn = document.createElement("button");
-        btn.textContent = selectedStationId === station.station_id ? "Viewing slots" : "View slots";
-        if (selectedStationId === station.station_id) btn.disabled = true;
-
-        btn.onclick = () => {
-          selectedStationId = station.station_id;
-          renderStations();
-          renderSlotsForStation(station.station_id);
-        };
-
-        card.appendChild(header);
-        card.appendChild(btn);
-        container.appendChild(card);
+        box.innerHTML += `
+          <div class="station-card">
+            <div class="station-header">
+              <div>
+                <strong>${st.name}</strong><br>
+                <span class="muted">${st.location}</span>
+                ${distanceLabel}
+              </div>
+              <div class="badge">${st.kw} kW • ${st.total} bays</div>
+            </div>
+            <button onclick="openStation('${st.id}')">View slots</button>
+          </div>
+        `;
       });
     }
 
-    function renderSlotsForStation(stationId) {
-      const station = stations.find((s) => s.station_id === stationId);
-      const container = document.getElementById("rightContent");
-      container.innerHTML = "";
+    function openStation(id) {
+      selectedStation = stations.find(s => s.id === id);
+      const box = document.getElementById("rightContent");
+      if (!box) return;
 
-      const title = document.createElement("div");
-      title.className = "section-title";
-      title.textContent = station.name;
-      container.appendChild(title);
+      box.innerHTML = `
+        <h3>${selectedStation.name}</h3>
+        <p class="muted">${selectedStation.location}</p>
+      `;
 
-      const meta = document.createElement("p");
-      meta.className = "muted";
-      meta.textContent = `${station.location} • ${station.charger_kw} kW • ${station.total_slots} bays`;
-      container.appendChild(meta);
+      const list = document.createElement("div");
+      list.className = "slot-list";
 
-      const legend = document.createElement("p");
-      legend.innerHTML =
-        `<span class="pill"><span class="pill-dot"></span>Available</span> ` +
-        `<span class="pill"><span class="pill-dot busy"></span>Booked</span>`;
-      legend.style.margin = "8px 0 6px";
-      container.appendChild(legend);
-
-      const slotList = document.createElement("div");
-      slotList.className = "slot-list";
-
-      const stationSlots = slots.filter((s) => s.station_id === stationId);
-
+      const stationSlots = slots.filter(s => s.st === id);
       if (stationSlots.length === 0) {
-        const empty = document.createElement("div");
-        empty.className = "empty";
-        empty.textContent = "No slots configured for this station yet.";
-        slotList.appendChild(empty);
+        list.innerHTML = `<p class="empty">No slots configured yet.</p>`;
       } else {
-        stationSlots.forEach((slot) => {
+        stationSlots.forEach(slot => {
           const row = document.createElement("div");
           row.className = "slot-row";
 
           const main = document.createElement("div");
           main.className = "slot-main";
-
-          const time = document.createElement("div");
-          time.className = "slot-time";
-          time.textContent = `${slot.start_time} – ${slot.end_time}`;
-
-          const status = document.createElement("div");
-          status.className =
-            "slot-status " +
-            (slot.status === "AVAILABLE" ? "status-available" : "status-booked");
-          status.textContent = slot.status === "AVAILABLE" ? "Available" : "Booked";
-
-          main.appendChild(time);
-          main.appendChild(status);
+          main.innerHTML = `
+            <div class="slot-time">${slot.start} – ${slot.end}</div>
+            <div class="slot-status ${slot.status === "AVAILABLE" ? "status-available" : "status-booked"}">
+              ${slot.status}
+            </div>
+          `;
 
           const btn = document.createElement("button");
-          if (slot.status === "AVAILABLE") {
-            btn.textContent = "Book";
-            btn.onclick = () => openConfirm(station, slot);
-          } else {
-            btn.textContent = "Full";
-            btn.disabled = true;
-          }
+          btn.textContent = slot.status === "AVAILABLE" ? "Book" : "Full";
+          btn.disabled = slot.status !== "AVAILABLE";
+          btn.onclick = () => openConfirm(slot);
 
           row.appendChild(main);
           row.appendChild(btn);
-          slotList.appendChild(row);
+          list.appendChild(row);
         });
       }
 
-      container.appendChild(slotList);
+      box.appendChild(list);
     }
 
-    // ---------- Confirm + booking ----------
-
-    function openConfirm(station, slot) {
-      pendingBooking = { station, slot };
+    function openConfirm(slot) {
+      pendingBooking = slot;
       const details = document.getElementById("confirmDetails");
       details.innerHTML = `
-        <div><span class="summary-label">Station</span> ${station.name}</div>
-        <div><span class="summary-label">Time</span> ${slot.start_time} – ${slot.end_time}</div>
-        <div><span class="summary-label">User</span> ${currentUser || "Demo user"}</div>
-        <div><span class="summary-label">Date</span> ${slot.date}</div>
+        Station: <b>${selectedStation.name}</b><br>
+        Time: <b>${slot.start} – ${slot.end}</b><br>
+        User: <b>${currentUser || "Demo user"}</b>
       `;
       document.getElementById("confirmOverlay").classList.add("active");
     }
@@ -555,48 +557,44 @@
       document.getElementById("confirmOverlay").classList.remove("active");
     }
 
+    // INSTANT booking – no delay, no payment screen
     function confirmBooking() {
-      if (!pendingBooking) return;
-      const { station, slot } = pendingBooking;
+      if (!pendingBooking || !selectedStation) return;
 
-      slot.status = "BOOKED";
-      const bookingId = "VB-" + Math.floor(Math.random() * 1_000_000);
-
+      pendingBooking.status = "BOOKED";
       lastBooking = {
-        booking_id: bookingId,
-        station_id: station.station_id,
-        slot_id: slot.slot_id,
-        start_time: slot.start_time,
-        end_time: slot.end_time,
-        station_name: station.name,
+        station: selectedStation.name,
+        time: `${pendingBooking.start} – ${pendingBooking.end}`,
         user: currentUser || "Demo user"
       };
 
       closeConfirm();
-      renderSlotsForStation(station.station_id);
-      renderStations();
-      renderSuccessScreen();
+      openStation(selectedStation.id); // refresh slots
+      renderSuccess();
       showScreen("screen-success");
     }
 
-    function renderSuccessScreen() {
+    function renderSuccess() {
       const box = document.getElementById("successSummary");
+      if (!box) return;
       if (!lastBooking) {
-        box.innerHTML = "<div class='empty'>No booking data.</div>";
+        box.innerHTML = "<p class='muted'>No booking data.</p>";
         return;
       }
       box.innerHTML = `
-        <div><span class="summary-label">Booking ID</span> <span class="highlight">${lastBooking.booking_id}</span></div>
-        <div><span class="summary-label">Station</span> ${lastBooking.station_name}</div>
-        <div><span class="summary-label">Time</span> ${lastBooking.start_time} – ${lastBooking.end_time}</div>
-        <div><span class="summary-label">User</span> ${lastBooking.user}</div>
-        <div><span class="summary-label">Status</span> Confirmed</div>
+        <p><strong>Station:</strong> ${lastBooking.station}</p>
+        <p><strong>Time:</strong> ${lastBooking.time}</p>
+        <p><strong>User:</strong> ${lastBooking.user}</p>
       `;
     }
 
     function goBackToStations() {
       showScreen("screen-main");
     }
+
+    // initial render so app isn't empty before login
+    renderStations();
   </script>
 </body>
 </html>
+            
